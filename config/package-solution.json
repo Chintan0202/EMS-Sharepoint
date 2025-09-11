@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "employee-management-portal-client-side-solution",
+    "id": "4a7b6266-1684-436f-b74b-d29f72b19ff9",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.21.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "employee-management-portal description"
+      },
+      "longDescription": {
+        "default": "employee-management-portal description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "employee-management-portal Feature",
+        "description": "The feature that activates elements of the employee-management-portal solution.",
+        "id": "6d1703ad-be69-4761-ad19-8299a70d2d1d",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/employee-management-portal.sppkg"
+  }
+}
