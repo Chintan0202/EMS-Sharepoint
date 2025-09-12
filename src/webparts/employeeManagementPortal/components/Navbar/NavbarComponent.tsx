@@ -39,11 +39,11 @@ export const Navbar: React.FC<INavbarProps> = ({ onSelectPage }) => {
       selectedKey={activeMenu}
       styles={{
         root: {
-          width: "180px",
           height: "100%",
           boxSizing: "border-box",
           borderRight: "1px solid #ddd",
           overflowY: "auto",
+          flex: "start"
         },
       }}
       onLinkClick={(ev, item) => {

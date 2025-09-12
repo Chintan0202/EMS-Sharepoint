@@ -25,7 +25,7 @@ export default class EmployeeManagementPortalWebPart extends BaseClientSideWebPa
 
   public onInit(): Promise<void> {
   this._sp = spfi("https://tatvasoft0.sharepoint.com/sites/ems").using(SPFx(this.context));
-  this.employeeHttpService = new EmployeeHttpService(this.context.spHttpClient, "https://tatvasoft0.sharepoint.com/sites/CustomPOCSite");
+  this.employeeHttpService = new EmployeeHttpService(this.context);
   return Promise.resolve();
 }
 

@@ -35,7 +35,7 @@ const EmployeeManagementPortal: React.FC<IEmployeeManagementPortalProps> = (
       <h2 className={styles.webpartTitle}>Employee Management System</h2>
 
       <div className={styles.employeeManagementPortal}>
-        <div style={{ flex: "0 0 180px" }}>
+        <div style={{ flex: "0 0 230px" }}>
           <Navbar onSelectPage={setActivePage} />
         </div>
 
