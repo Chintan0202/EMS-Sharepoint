@@ -1,3 +1,4 @@
+/* eslint-disable no-void */
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { IconButton, Callout, Persona, PersonaSize, Stack, Text } from "@fluentui/react";
@@ -21,10 +22,10 @@ const UserProfileMenu: React.FC<IUserProfileProps> = ({ employeeHttpService }) =
 
   // Fetch user profile data
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser = async (): Promise<void> => {
       try {
-        const data = await employeeHttpService.getCurrentUserDetails();
-        const UserUrl = data?.UserUrl || "/_layouts/15/images/person.gif";
+        const data = await employeeHttpService.getCurrentUserDetail();
+        const UserUrl = data?.PictureUrl || "/_layouts/15/images/person.gif";
 
         setUser({
           DisplayName: data.DisplayName,
@@ -54,8 +55,7 @@ const UserProfileMenu: React.FC<IUserProfileProps> = ({ employeeHttpService }) =
           <img
             src={user.UserUrl}
             alt="User"
-            style={{ width: "100%", height: "100%", borderRadius: "50%" }}
-            className="ms-Image-image ms-Image-image--cover ms-Image-image--portrait is-notLoaded is-fadeIn is-error image-230"
+            style={{ width: "100%", borderRadius: "50%" }}
           />
         )}
       </IconButton>
@@ -80,7 +80,7 @@ const UserProfileMenu: React.FC<IUserProfileProps> = ({ employeeHttpService }) =
                 size={PersonaSize.size56}
                 imageUrl={user.UserUrl}
               />
-              <Text variant="small" styles={{ root: { fontStyle: "italic", marginTop: 4 } }}>
+              <Text variant="medium" styles={{ root: { marginTop: 4 } }}>
                 {user.Email}
               </Text>
             </Stack>
