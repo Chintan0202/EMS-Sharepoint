@@ -16,8 +16,8 @@ export class EmployeeService {
 
   public async getEmployees(): Promise<IEmployee[]> {
     try {
-    const items = await this.sp.web.lists.getByTitle(this.listName).items
-      .select("Id", "Title", "Department", "Email")();
+      const items = await this.sp.web.lists.getByTitle(this.listName).items
+        .select("Id", "Title", "Department", "Email")();
 
       return items;
     } catch (error) {
@@ -49,4 +49,5 @@ export class EmployeeService {
       console.error("Error deleting employee:", error);
     }
   }
+
 }

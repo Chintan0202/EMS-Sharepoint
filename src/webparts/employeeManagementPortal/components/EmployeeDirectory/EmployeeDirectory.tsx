@@ -45,6 +45,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isCardView, setIsCardView] = useState<boolean>(false);
+  const [userRole, SetUserRole] = useState<string>("");
 
   const [editingEmployee, setEditingEmployee] = useState<IEmployee>(
     {} as IEmployee
@@ -163,11 +164,17 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
       console.error("Error deleting employee:", err);
     }
   };
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
         const user = await employeeHttpService.getCurrentUserDetails();
-        console.log(user);
+        const userGroup = (await sp.web.currentUser.groups()).map(
+          (e) => e.Title
+        );
+        if (userGroup.some(g => g.includes("Owners"))) {
+          SetUserRole("Admin");
+        }
         setCurrentUser(user);
       } catch (error) {
         console.error("Error fetching current user:", error);
@@ -279,22 +286,26 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
       isResizable: true,
       onRender: (item: IEmployee) => (
         <>
-          <IconButton
-            iconProps={{ iconName: "Edit" }}
-            title="Edit"
-            ariaLabel="Edit"
-            onClick={() => handleEdit(item)}
-          />
-          <IconButton
-            iconProps={{ iconName: "Delete" }}
-            title="Delete"
-            ariaLabel="Delete"
-            onClick={() => {
-              setEditingEmployee(item);
-              setIsDeleteDialogOpen(true);
-            }}
-            styles={{ root: { color: "red" } }}
-          />
+          {userRole === "Admin" && (
+            <>
+              <IconButton
+                iconProps={{ iconName: "Edit" }}
+                title="Edit"
+                ariaLabel="Edit"
+                onClick={() => handleEdit(item)}
+              />
+              <IconButton
+                iconProps={{ iconName: "Delete" }}
+                title="Delete"
+                ariaLabel="Delete"
+                onClick={() => {
+                  setEditingEmployee(item);
+                  setIsDeleteDialogOpen(true);
+                }}
+                styles={{ root: { color: "red" } }}
+              />
+            </>
+          )}
         </>
       ),
     },
@@ -302,7 +313,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
 
   return (
     <div style={{ display: "flex", height: "100%" }}>
-      {/* LEFT SECTION - 70% */}
       <div
         style={{
           flexBasis: "70%",
@@ -348,7 +358,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
           </div>
         </div>
 
-        {/* ADD EMPLOYEE BUTTON */}
         <div style={{ display: "flex", justifyContent: "flex-end" }}>
           <PrimaryButton
             text="Add Employee"
@@ -474,7 +483,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
             />
           </DialogFooter>
         </Dialog>
-        {/* TABLE / CARD VIEW - WITH HORIZONTAL SCROLL */}
         <div
           style={{
             flex: 1,
@@ -486,9 +494,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
           {loading && <Spinner label="Loading..." />}
 
           {!loading && (
-            <div
-              style={{ minWidth: "900px" /* Force scroll if table is wide */ }}
-            >
+            <div style={{ minWidth: "900px" }}>
               {isCardView ? (
                 <div
                   style={{
@@ -559,7 +565,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
                         </div>
                       )}
 
-                      {/* NAME */}
                       <h3
                         style={{
                           margin: "4px 0",
@@ -571,7 +576,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
                         {emp.Title}
                       </h3>
 
-                      {/* STATUS */}
                       <span
                         style={{
                           fontSize: "0.75rem",
@@ -583,7 +587,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
                         {emp.IsActive ? "Active" : "Inactive"}
                       </span>
 
-                      {/* DETAILS */}
                       <div
                         style={{
                           fontSize: "0.85rem",
@@ -619,7 +622,7 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
                   items={employees}
                   columns={columns}
                   setKey="Id"
-                  selectionMode={SelectionMode.single}
+                  selectionMode={SelectionMode.none}
                   layoutMode={DetailsListLayoutMode.justified}
                   compact
                 />
@@ -655,7 +658,6 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
         </div>
       </div>
 
-      {/* RIGHT SECTION - 30% */}
       {currentUser && (
         <div
           style={{
@@ -716,7 +718,9 @@ const EmployeeDirectory: React.FC<IEmployeeDirectoryProps> = ({
               width: "100%",
             }}
           >
-            <p style={{ margin: "2px 0",textWrap: "wrap" }}>{currentUser.Email}</p>
+            <p style={{ margin: "2px 0", textWrap: "wrap" }}>
+              {currentUser.Email}
+            </p>
           </div>
         </div>
       )}

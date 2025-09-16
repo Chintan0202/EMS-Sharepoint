@@ -1,0 +1,38 @@
+.leaveTracker {
+  padding: 10px;
+  background-color: #fff;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.statusBadge {
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: white;
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.approved {
+  background-color: green;
+}
+
+.pending {
+  background-color: orange;
+}
+
+.rejected {
+  background-color: red;
+}
+
+.noData {
+  margin-top: 10px;
+  text-align: center;
+  font-style: italic;
+  color: #777;
+}

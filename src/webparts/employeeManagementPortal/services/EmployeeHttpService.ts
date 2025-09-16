@@ -9,29 +9,28 @@ export class EmployeeHttpService {
     this.context = context;
   }
 
-public async getEmployees(listName: string, searchtext?: string): Promise<any[]> {
-  let filterQuery = "";
-  if (searchtext && searchtext.trim().length > 0) {
-    filterQuery = `&$filter=substringof('${searchtext}',Title) or substringof('${searchtext}',Email) or substringof('${searchtext}',Designation) or substringof('${searchtext}',EmployeeID)`;
+  public async getEmployees(listName: string, searchtext?: string): Promise<any[]> {
+    let filterQuery = "";
+    if (searchtext && searchtext.trim().length > 0) {
+      filterQuery = `&$filter=substringof('${searchtext}',Title) or substringof('${searchtext}',Email) or substringof('${searchtext}',Designation) or substringof('${searchtext}',EmployeeID)`;
+    }
+
+    const endpoint = `${this.context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listName}')/items` +
+      `?$select=Id,Title,EmployeeID,DepartmentId,Email,Designation,PhoneNumber,IsActive,Department/Id,Department/Title,PhotoUrl` +
+      `&$expand=Department${filterQuery}`;
+
+    const response: SPHttpClientResponse = await this.context.spHttpClient.get(
+      endpoint,
+      SPHttpClient.configurations.v1
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error fetching employees: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.value;
   }
-
-  const endpoint = `${this.context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listName}')/items` +
-    `?$select=Id,Title,EmployeeID,DepartmentId,Email,Designation,PhoneNumber,IsActive,Department/Id,Department/Title,PhotoUrl` +
-    `&$expand=Department${filterQuery}`;
-
-  const response: SPHttpClientResponse = await this.context.spHttpClient.get(
-    endpoint,
-    SPHttpClient.configurations.v1
-  );
-
-  if (!response.ok) {
-    throw new Error(`Error fetching employees: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.value;
-}
-
 
   public async addEmployee(listName: string, employee: any): Promise<any> {
     const endpoint = `${this.context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listName}')/items`;
@@ -83,7 +82,6 @@ public async getEmployees(listName: string, searchtext?: string): Promise<any[]>
       SPHttpClient.configurations.v1,
       options
     );
-    console.log(response);
     if (!response.ok) {
       const err = await response.text();
       throw new Error(`Upload failed (${response.status}): ${err}`);
@@ -132,7 +130,6 @@ public async getEmployees(listName: string, searchtext?: string): Promise<any[]>
   public async getCurrentUserDetail(): Promise<any> {
     const client: MSGraphClientV3 = await this.context.msGraphClientFactory.getClient("3");
 
-    // Step 1: Get basic user profile info
     const user = await client
       .api('/me')
       .select('id,displayName,givenName,surname,mail,userPrincipalName,jobTitle,department,officeLocation,mobilePhone')
@@ -168,6 +165,7 @@ public async getEmployees(listName: string, searchtext?: string): Promise<any[]>
       text: d.Title,
     }));
   }
+
   public async deleteEmployee(listName: string, id: number): Promise<void> {
     const endpoint = `${this.context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listName}')/items(${id})`;
 
@@ -187,5 +185,6 @@ public async getEmployees(listName: string, searchtext?: string): Promise<any[]>
       throw new Error(`Error deleting employee: ${response.statusText}`);
     }
   }
+ 
 
 }

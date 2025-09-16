@@ -5,6 +5,7 @@ import styles from "./EmployeeManagementPortal.module.scss";
 
 import EmployeeDirectory from "./EmployeeDirectory/EmployeeDirectory";
 import { Navbar } from "./Navbar/NavbarComponent";
+import { LeaveTrackerComponent } from "./LeaveTracker/LeaveTrackerComponent";
 
 const EmployeeManagementPortal: React.FC<IEmployeeManagementPortalProps> = (
   props
@@ -22,7 +23,9 @@ const EmployeeManagementPortal: React.FC<IEmployeeManagementPortalProps> = (
           />
         );
       case "leave":
-        return <p>Leave Tracker</p>;
+        return (
+          <LeaveTrackerComponent sp={props.sp} listName="LeaveTracker"/>
+        );
       case "announcements":
         return <p>Announcements</p>;
       default:
